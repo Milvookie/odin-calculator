@@ -2,4 +2,83 @@
     margin: 0;
     padding: 0;
     box-sizing: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+}
+
+main {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#calculator-frame {
+    margin: auto;
+    border-radius: 15px;
+    background: linear-gradient(to right, rgb(62, 62, 62), rgb(41,41,41));
+    width: 432px;
+    padding: 32px 24px;
+}
+
+.display {
+    /* background-color: rgb(155, 176, 83); */
+    background: linear-gradient(to right, rgb(161, 182, 87), rgb(141,162,71));
+    border-radius: 15px;
+    color: aliceblue;
+}
+
+.display p {
+    text-align: right;
+    padding: 8px 16px;
+}
+
+.user-input {
+    font-size: 1.5em;
+}
+
+.result {
+    font-size: 1.2em;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 60px);
+    grid-column-gap: 24px;
+    grid-row-gap: 20px;
+    margin: 32px 16px 0 16px;
+
+}
+
+.container button {
+    border: 3px solid rgb(28, 28, 28);
+    color: rgb(194, 194, 194);
+    font-size: x-large;
+}
+
+button:nth-child(4n-3) {
+    background-color: rgb(94, 94, 94);
+}
+
+button:nth-child(4n-2) {
+    background-color: rgb(92, 92, 92);
+}
+
+button:nth-child(4n-1) {
+    background-color: rgb(84, 84, 84);
+}
+
+button:nth-child(4n) {
+    background-color: rgb(79, 79, 79);
+}
+
+button:last-child {
+    grid-column: span 2;
+    background-color: rgb(166,34,9);
 }

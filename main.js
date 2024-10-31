@@ -31,7 +31,7 @@ function multiply(a, b) {
 
 function divide(a, b) {
     if (b == 0) {
-        return 'Nice try smartass'
+        return 'Nope'
     }
     return a / b
 }
