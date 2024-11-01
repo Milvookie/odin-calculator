@@ -1,4 +1,19 @@
+let operandOne, operandTwo, operator;
 
+function displayUserInput() {
+    let el = document.querySelector('.user-input')
+}
+
+function handleClick(btn) {
+    console.log(btn.getAttribute('data-type'));
+    
+}
+
+document.querySelector('.container').addEventListener('click', (e) => {
+    if (e.target.nodeName == 'BUTTON') {
+        handleClick(e.target)
+    }
+})
 
 function operate(num1, num2, symbol) {
     switch (symbol) {
@@ -14,8 +29,6 @@ function operate(num1, num2, symbol) {
             break;
     }
 }
-
-let operandOne, operandTwo, operator;
 
 function add(a, b) {
     return a + b
