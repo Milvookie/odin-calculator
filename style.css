@@ -41,6 +41,10 @@ main {
 .user-input {
     font-size: 1.5em;
 }
+.user-input:empty::before {
+    content:"";
+    display:inline-block
+}
 
 .result {
     font-size: 1.2em;
