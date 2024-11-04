@@ -1,34 +1,117 @@
-const Calculator = {
-    state: {
-        initial: true,
-        num: false,
-        operator: false,
-        decimal: false,
-        percent: false,
-    },
-    history: [],
-}
-
 let history = []
 
 let state = {
-    initial: true,
+    digit: true,
+    operator: false,
+    decimal: true,
+    percent: false,
+    equal: false,
+}
+
+let lastBtnClicked = {
+    digit: false,
+    operator: false,
     decimal: false,
+    percent: false,
+    equal: false
+}
+
+let useState = () => {
+    if (operandOne != '') {
+        console.log('operand 1 not empty'); 
+    }
 }
 
 let operation = {
     value1: null,
     value2: null,
     operator: null,
-}
+} 
 
-let operandOne, operandTwo, operator;
-operandOne = operandTwo = operator = ''
+let operandOne, operandTwo;
+operandOne = operandTwo = ''
+
+function handleClick(btn) {
+    let key = btn.getAttribute('data-type')
+    let value = btn.getAttribute('value')
+
+    //console.log(state);
+    console.log(operation);
+    console.log(history);
+    console.log(lastBtnClicked);
+    
+
+    switch (key) {
+        case 'digit':
+            if (state.digit) {
+                if (operation.operator) {
+                    operandTwo += value
+                } else {
+                    operandOne += value
+                }
+                displayUserInput(value)
+                lastBtnClicked[key] = true;
+                
+            } else {
+                console.log('do not accept digit');
+                
+            }
+
+            break;
+
+        case 'operator':
+            if (state.operator) {
+                console.log('accept operator');
+                
+            } else {
+                console.log('do not accept operator');
+                
+            }
+            
+            break;
+
+        case 'equal':
+            if (state.operator) {
+                console.log('accept equal');
+                
+            } else {
+                console.log('do not accept equal');
+                
+            }
+            break;
+
+        case 'decimal':
+            if (state.decimal) {
+                console.log('accept decimal');
+                if (operation.operator) {
+                    operandTwo += value
+                } else {
+                    operandOne += value
+                }
+                displayUserInput(value)
+                lastBtnClicked[key] = true;
+
+                
+            } else {
+                console.log('do not accept decimal');
+                
+            }
+
+            break;
+
+        case 'clear':
+            break;
+
+        default:
+            break;
+    }
+
+}
 
 document.querySelector('.container').addEventListener('click', (e) => {
     if (e.target.nodeName == 'BUTTON') {
         //handleClick(e.target)
-        clickHandle(e.target)
+        //clickHandle(e.target)
     }
 })
 
@@ -108,67 +191,6 @@ function clickHandle(btn) {
 
     console.log(state);
     console.log(operation);
-}
-
-function handleClick(btn) {
-    let key = btn.getAttribute('data-type')
-    let value = btn.getAttribute('value')
-
-    console.log(state);
-    console.log(operation);
-
-    if (state.initial) {
-        if (key == 'digit') {
-            operandOne += value
-            state.initial = false
-            displayUserInput(value)
-        } else if (key == 'decimal') {
-            operandOne += value
-            state.decimal = true
-            state.initial = false
-            displayUserInput(value)
-        }
-
-    } else {
-        console.log('second step');
-        if (state.decimal) {
-            console.log('waiting for a number');
-            if (key == 'digit') {
-                operandOne += value
-                displayUserInput(value)
-                state.decimal = false
-            }
-        } else {
-            if (key == 'digit') {
-                operandOne += value
-                displayUserInput(value)
-            } else if (key == 'operator') {
-                operation.value1 = Number(operandOne)
-                console.log(key);
-            }
-
-
-        }
-
-        // switch (key) {
-        // case 'operator':
-        // displayUserInput(value)
-        // break;
-        // case 'digit':
-        // displayUserInput(value)
-        // break;
-        // case 'decimal':
-        // displayUserInput(value)
-        // break;
-        // case 'clear':
-        // value == 'reset' ? clearAll() : console.log('delete')
-        // break;
-        // 
-        // default:
-        // break;
-        // }
-    }
-
 }
 
 function displayResult(value) {
