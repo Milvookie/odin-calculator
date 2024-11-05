@@ -143,10 +143,7 @@ const Calculator = {
 
     transformStrToNumber(str) {
         if (str.slice(-1) == '.') {
-            console.log('decimal number');
-            console.log(str.slice(0, -1) + '.');
             return Number(str.slice(0, -1)) + '.'
-            //return number and dot
         } else {
             return Number(str)
         }
