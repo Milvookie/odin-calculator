@@ -10,7 +10,6 @@ const Calculator = {
             key: null,
             value: null,
         },
-        isCurrentFloat: false
     },
     history: [],
 
@@ -27,18 +26,16 @@ const Calculator = {
         this.state.lastBtnClicked.value = value
     },
 
-    updateState() {
-        console.log('operand one: ' + this.operandOne);
-        console.log('operand two: '+this.operandTwo);
-                
+    updateState() {    
+
         if (this.state.lastBtnClicked.key == 'digit') {
             this.state.currentState.acceptOperator = true
-            if(!this.operation.value1) {
-                if(!this.operandOne.includes('.')) {
+            if (!this.operation.value1) {
+                if (!this.operandOne.includes('.')) {
                     this.state.currentState.acceptDecimal = true
                 }
             } else {
-                if(!this.operandTwo.includes('.')) {
+                if (!this.operandTwo.includes('.')) {
                     this.state.currentState.acceptDecimal = true
                 }
             }
@@ -67,6 +64,13 @@ const Calculator = {
             this.state.currentState.readyForCalculation = false
         }
 
+        if (this.state.lastBtnClicked.value == 'reset') {
+            this.state.currentState.acceptDigit = true
+            this.state.currentState.acceptDecimal = true
+            this.state.currentState.acceptOperator = false
+            this.state.currentState.readyForCalculation = false 
+        }
+
     },
 
     handleClick(btn) {
@@ -76,7 +80,6 @@ const Calculator = {
         switch (key) {
             case 'digit':
                 if (this.state.currentState.acceptDigit) {
-                    console.log('accept digit');
                     if (!this.operation.value1) {
                         this.operandOne += value
                     } else {
@@ -86,15 +89,11 @@ const Calculator = {
                     this.displayUserInput(value)
                     this.updateLastBtn(key, value)
 
-                } else {
-                    console.log('does not accept digit');
-
                 }
-
                 break;
+
             case 'decimal':
                 if (this.state.currentState.acceptDecimal) {
-                    console.log('accept decimal');
                     if (!this.operation.value1) {
                         this.operandOne += value
                     } else {
@@ -102,24 +101,17 @@ const Calculator = {
                     }
                     this.displayUserInput(value)
                     this.updateLastBtn(key, value)
-
-
-                } else {
-                    console.log('does not accept decimal');
-
                 }
-
                 break;
+
             case 'operator':
                 if (this.state.currentState.readyForCalculation) {
-                    console.log('ready for calcul but does not accept operator');
                     this.handleCalculation()
                     this.operation.operator = value
                     this.displayUserInput(value)
                     this.updateLastBtn(key, value)
                 }
                 else if (this.state.currentState.acceptOperator) {
-                    console.log('accept operator');
                     if (!this.operation.value1) {
                         this.operation.value1 = Number(this.operandOne)
                     }
@@ -128,35 +120,17 @@ const Calculator = {
                     this.updateLastBtn(key, value)
 
                 }
-                else {
-                    console.log('does not accept operator');
-
-                }
-
                 break;
+
             case 'equal':
                 if (this.state.currentState.readyForCalculation) {
-                    console.log('accept equal');
                     this.handleCalculation()
                     this.updateLastBtn(key, value)
-
-                } else {
-                    console.log('does not accept equal');
-
-                }
-
+                } 
                 break;
 
             case 'clear':
-                console.log(value);
-                if (value == 'reset') {
-                    this.clearAll()
-                }
-
-                if (value == 'delete') {
-                    this.deleteLastInput()
-                }
-
+                value == 'reset' ? this.clearAll(key, value) : this.deleteLastInput()
                 break;
 
             default:
@@ -167,12 +141,34 @@ const Calculator = {
 
     },
 
+    transformStrToNumber(str) {
+        if (str.slice(-1) == '.') {
+            console.log('decimal number');
+            console.log(str.slice(0, -1) + '.');
+            return Number(str.slice(0, -1)) + '.'
+            //return number and dot
+        } else {
+            return Number(str)
+        }
+    },
+
     displayUserInput(value) {
+        let content = ''
         if (value) {
             this.history.push(value)
         }
+        if (!this.operation.value1) {
+            content = this.transformStrToNumber(this.operandOne)
+        } else {
+            if (this.operandTwo != '') {
+                content += this.operation.value1 + this.operation.operator + this.transformStrToNumber(this.operandTwo)
+                
+            } else {
+                content += this.operation.value1 + this.operation.operator
+            }  
+        }
         let el = document.querySelector('.user-input')
-        el.textContent = this.history.join('')
+        el.textContent = content
     },
 
     displayCalculationResult(value) {
@@ -257,24 +253,20 @@ const Calculator = {
         return a / b
     },
 
-    clearAll() {
-        this.displayCalculationResult(0)
-        this.history = []
-        this.displayUserInput()
+    clearAll(key, value) {
         this.operandOne = this.operandTwo = ''
         for (const key in this.operation) {
             this.operation[key] = null
         }
-        this.state.currentState.acceptDigit = true
-        this.state.currentState.acceptDecimal = true
-        this.state.currentState.acceptOperator = false
-        this.state.currentState.readyForCalculation = false
+        this.displayCalculationResult(0)
+        this.history = []
+        this.displayUserInput()
+        this.updateLastBtn(key, value)
     },
 
     deleteLastInput() {
         if (this.state.lastBtnClicked.key == 'digit' || this.state.lastBtnClicked.key == 'decimal' || this.state.lastBtnClicked.key == 'operator') {
             this.history.pop()
-            this.displayUserInput()
             if (this.state.lastBtnClicked.key == 'digit' || this.state.lastBtnClicked.key == 'decimal') {
                 if (this.operation.value1) {
                     this.operandTwo = this.operandTwo.substring(0, this.operandTwo.length - 1)
@@ -284,10 +276,10 @@ const Calculator = {
             } else if (this.state.lastBtnClicked.key == 'operator') {
                 this.operation.operator = null
             }
-            //update lastBtn with previous value
+            this.displayUserInput()
             let previousBtn = this.getLastInput()
             this.updateLastBtn(previousBtn.key, previousBtn.value)
-        } 
+        }
     },
 }
 
